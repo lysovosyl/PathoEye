@@ -91,7 +91,7 @@ python 06_visualize_hotspot
 ### Contributors
 
 Thank you to the following people who participated in the project：
-Jiajian Zhou、Yongjun Zhang、Yan Lin
+Jiajian Zhou、Yongjun Zhang、Feiyan Lin
 
 ## License
 
