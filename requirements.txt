@@ -1,0 +1,16 @@
+SimpleITK==2.2.1
+torch==2.0.0
+torchmetrics==0.9.0
+torchvision==0.15.1
+opencv-python==4.7.0.72
+opencv-python-headless==4.7.0.72
+scikit-image==0.20.0
+scikit-learn==1.2.2
+openslide-python==1.2.0
+matplotlib==3.7.0
+matplotlib-inline==0.1.6
+pyradiomics==3.0.1
+six==1.16.0
+numpy==1.23.5
+pandas==2.0.1
+pypickle==1.1.0

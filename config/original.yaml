@@ -1,0 +1,37 @@
+setting:
+  # Normalization:
+  # most likely not needed, CT gray values reflect absolute world values (HU) and should be comparable between scanners.
+  # If analyzing using different scanners / vendors, check if the extracted features are correlated to the scanner used.
+  # If so, consider enabling normalization by uncommenting settings below:
+  normalize: true
+  normalizeScale: 500  # This allows you to use more or less the same bin width.
+
+  # Resampling:
+  # Usual spacing for CT is often close to 1 or 2 mm, if very large slice thickness is used,
+  # increase the resampled spacing.
+  # On a side note: increasing the resampled spacing forces PyRadiomics to look at more coarse textures, which may or
+  # may not increase accuracy and stability of your extracted features.
+  interpolator: 'sitkBSpline'
+  resampledPixelSpacing: [1, 1, 1]
+  padDistance: 10  # Extra padding for large sigma valued LoG filtered images
+  binWidth: 25
+  voxelArrayShift: 1000  # Minimum value in HU is -1000, shift +1000 to prevent negative values from being squared.
+  label: 1
+
+
+
+# Image types to use: "Original" for unfiltered image, for possible filters, see documentation.
+imageType:
+  Original: {} # for dictionaries / mappings, None values are not allowed, '{}' is interpreted as an empty dictionary
+
+
+
+featureClass:
+  # redundant Compactness 1, Compactness 2 an Spherical Disproportion features are disabled by default, they can be
+  # enabled by specifying individual feature names (as is done for glcm) and including them in the list.
+  firstorder: [] # specifying an empty list has the same effect as specifying nothing.
+  glcm:
+  glrlm: # for lists none values are allowed, in this case, all features are enabled
+  glszm:
+  gldm:  # contains deprecated features, but as no individual features are specified, the deprecated features are not enabled
+  ngtdm:
