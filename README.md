@@ -32,8 +32,29 @@ pip install -r requirements.txt
 
 # Example
 
-## Step by step
+## Thickness and Fold change analyse
+To analyse how thickness and rete ridge length change of epidermis during skin aging, we should run script in the fold of 'thickness_rete_ridge_length'
+Make sure you have downloaded dataset from https://gtexportal.org/home/histologyPage and saved them in your computer.
+### Image segmentation
+You should use thickness_rete_ridge_length/01_cut_pic.py to sample image that will be used to extract epidermis
+```shell
+python thickness_rete_ridge_length/01_cut_pic.py -data_path /your_download_dataset_path -save_path ./the_dir_you_want_to_save_sample_image
+```
 
+## Segment epidermis
+Next you should use thickness_rete_ridge_length/02_seg_image.py to seg epidermis so that you can get ready for calculate thickness and rete ridge length 
+```shell
+python thickness_rete_ridge_length/02_seg_image.py -input_path thickness_rete_ridge_length/01_cut_pic.py -save_path ./the_dir_you_want_to_save_sample_image
+```
+
+## Calculate thickness and rete ridge length 
+Finally you can calculate thickness and rete ridge length 
+```shell
+python thickness_rete_ridge_length/03_analys.py -lable_path label/Sun_Exposed_Lower_leg_hist.txt -data_path ./the_data_save_from_02_seg_image -save_path ./your_save_path.xlsx 
+```
+
+
+## Image classify
 ### Image segmentation
 Make sure you have downloaded dataset from https://gtexportal.org/home/histologyPage and saved them in your computer.
 First you should use 01_cut_image.py to implement segmentation on whole-slide image
@@ -60,6 +81,8 @@ To make dataset, which can be used to train your model, you should run 04_make_d
 python 04_make_deeplearning_dataset.py -input_path /the_path_you_want_to_save_output/128/ -label_path /label/Sun_Exposed_Lower_leg_hist.txt -save_path /the_path_save_dl_dataset
 python 04_make_RandomForest_dataset.py -input_path /the_path_you_want_to_save_features_128*128_image -label_path/Sun_Exposed_Lower_leg_hist.txt -save_path /the_path_save_rf_dataset
 ```
+
+
 train_features.csv
 ### Train model
 Next, you can train DL model and RF model
