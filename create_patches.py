@@ -22,8 +22,8 @@ device = args.device
 # input_path = '/mnt/dfc_data1/home/linyusen/database/48_pyeye_pic/patheye/data'
 # save_path = '/mnt/dfc_data1/home/linyusen/database/48_pyeye_pic/patheye/dataset'
 # device = 'cuda:0'
-# seg = method_infoseg()
-# sampler = sample_module(seg,device=device)
+seg = method_infoseg()
+sampler = sample_module(seg,device=device)
 
 
 #%%
