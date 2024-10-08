@@ -36,41 +36,41 @@ Make sure you have downloaded dataset from https://gtexportal.org/home/histology
 First you should use create_patches.py to segment images on whole-slide image. 
 The following example assumes that digitized whole slide image data in well known standard formats (.svs, .ndpi, .tiff etc.) are stored under a folder named DATA_DIRECTORY
 ```
-TRAIN_DIRECTORY/
-	├── class_1
-        ├──slide_1.svs
-        ├──slide_2.svs
-        ├──slide_3.svs
+    TRAIN_DIRECTORY/
+        ├── class_1
+            ├──slide_1.svs
+            ├──slide_2.svs
+            ├──slide_3.svs
+            └── ...
+        ├── class_2
+            ├──slide_1.svs
+            ├──slide_2.svs
+            ├──slide_3.svs
+            └── ...
+        ├── class_3
+            ├──slide_1.svs
+            ├──slide_2.svs
+            ├──slide_3.svs
+            └── ...
         └── ...
-	├── class_2
-        ├──slide_1.svs
-        ├──slide_2.svs
-        ├──slide_3.svs
-        └── ...
-    ├── class_3
-        ├──slide_1.svs
-        ├──slide_2.svs
-        ├──slide_3.svs
-        └── ...
-	└── ...
 
-VAL_DIRECTORY/
-	├── class_1
-        ├──slide_1.svs
-        ├──slide_2.svs
-        ├──slide_3.svs
+    VAL_DIRECTORY/
+        ├── class_1
+            ├──slide_1.svs
+            ├──slide_2.svs
+            ├──slide_3.svs
+            └── ...
+        ├── class_2
+            ├──slide_1.svs
+            ├──slide_2.svs
+            ├──slide_3.svs
+            └── ...
+        ├── class_3
+            ├──slide_1.svs
+            ├──slide_2.svs
+            ├──slide_3.svs
+            └── ...
         └── ...
-	├── class_2
-        ├──slide_1.svs
-        ├──slide_2.svs
-        ├──slide_3.svs
-        └── ...
-    ├── class_3
-        ├──slide_1.svs
-        ├──slide_2.svs
-        ├──slide_3.svs
-        └── ...
-	└── ...
 ```
 
 
@@ -80,40 +80,40 @@ python create_patches.py -input_path /VAL_DIRECTORY -save_path /VAL_DATASET -dev
 ```
 The above command produces the following folder structure for each slide
 ```
-DATASET/
-	├── class_1
-        ├──slide_1
-            ├──data
-                ├──1.png
-                ├──2.png
-                └──...
-            ├──mask_target.png
-            └──raw_img.png
-        ├──slide_2
-            ├──data
-                ├──1.png
-                ├──2.png
-                └──...
-            ├──mask_target.png
-            └──raw_img.png
+    DATASET/
+        ├── class_1
+            ├──slide_1
+                ├──data
+                    ├──1.png
+                    ├──2.png
+                    └──...
+                ├──mask_target.png
+                └──raw_img.png
+            ├──slide_2
+                ├──data
+                    ├──1.png
+                    ├──2.png
+                    └──...
+                ├──mask_target.png
+                └──raw_img.png
+            └── ...
+        ├── class_2
+            ├──slide_1
+                ├──data
+                    ├──1.png
+                    ├──2.png
+                    └──...
+                ├──mask_target.png
+                └──raw_img.png
+            ├──slide_2
+                ├──data
+                    ├──1.png
+                    ├──2.png
+                    └──...
+                ├──mask_target.png
+                └──raw_img.png
+            └── ...
         └── ...
-    ├── class_2
-        ├──slide_1
-            ├──data
-                ├──1.png
-                ├──2.png
-                └──...
-            ├──mask_target.png
-            └──raw_img.png
-        ├──slide_2
-            ├──data
-                ├──1.png
-                ├──2.png
-                └──...
-            ├──mask_target.png
-            └──raw_img.png
-        └── ...
-	└── ...
 ```
 
 ### Train model
