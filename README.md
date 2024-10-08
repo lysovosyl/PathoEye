@@ -22,9 +22,9 @@ This data can be downloaded from https://gtexportal.org/home/histologyPage
 ## Install
 Make sure you have installed all the package that were list in requirements.txt
 ```
-conda create -n patheye python==3.8
+conda create -n PathoEye python==3.8
 pip install -r requirements.txt
-conda activate patheye
+conda activate PathoEye
 ```
 
 # Example
