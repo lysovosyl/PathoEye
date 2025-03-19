@@ -17,7 +17,7 @@ from models.InfoSeg import InfoSeg
 class method_infoseg():
     def __init__(self,input_channel=3):
         self.loss_fn = torch.nn.CrossEntropyLoss()
-        self.label_colours = np.random.randint(255, size=(100, 3))  # 随机生成像素颜色。100对应100层特征图
+        self.label_colours = np.random.randint(255, size=(100, 3))
         self.im_shape = []
         self.nChannel = 24
         self.nConv = 2
@@ -45,7 +45,6 @@ class method_infoseg():
 
         mask_eb = np.zeros_like(mask).astype(np.uint8)
         mask_eb[mask == select_label] = 1
-        # 定义结构元素 (核) 5x5 的矩形核，你可以根据需求调整大小
         kernel = np.ones((5, 5), np.uint8)
         mask_eb_eroded = cv2.erode(mask_eb, kernel, iterations=1)
         mask_eb_dilated = cv2.dilate(mask_eb_eroded, kernel, iterations=1)
@@ -75,7 +74,7 @@ class method_infoseg():
             ignore, target = torch.max(output, 1)
             self.mask = target.data.cpu().numpy()
             for i in range(len(self.l_inds)):
-                labels_per_sp = self.mask[self.l_inds[i]]  # im_target指的是图像拉成一维数组后对应像素的颜色标签
+                labels_per_sp = self.mask[self.l_inds[i]]
                 u_labels_per_sp = np.unique(labels_per_sp)
                 hist = np.zeros(len(u_labels_per_sp))
                 for j in range(len(hist)):

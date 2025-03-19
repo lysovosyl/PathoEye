@@ -86,35 +86,4 @@ plt.imshow(region)
 plt.show()
 plt.imshow(reference)
 plt.show()
-#%%
-# def scan_object(slide):
-#     select_lebel = 0
-#     target_pixel = [174.04746886, 136.90078296, 193.84494564]
-#     black_pixel = [0,0,0]
-#     white_pixel = [255,255,255]
-#     for index,i in enumerate(slide.level_dimensions):
-#         if i[0] < 5000 or i[1] < 5000:
-#             select_lebel = index
-#     fold = slide.level_dimensions[0][0]/slide.level_dimensions[select_lebel][0]
-#     region = slide.read_region((0, 0), select_lebel, slide.level_dimensions[select_lebel])
-#     region = np.array(region)
-#     region = region[:,:,:3]
-#     seg =
-#     distance_target = np.linalg.norm(region - target_pixel,axis=2)
-#     reference = np.zeros_like(distance_target,dtype=np.uint8)
-#     reference[distance_target < 100 ] = 1
-#     slide_x,slide_y = slide.level_dimensions[0]
-#     contours, hierarchy = cv2.findContours(reference, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
-#     hole_region_list = []
-#     for i in range(len(contours)):
-#         if cv2.contourArea(contours[i]) > 100:
-#             shape = np.array(contours[i])
-#             x_end = min([int(np.max(shape[:,0,0])*fold)+1000,slide_x])
-#             x_start = max([int(np.min(shape[:, 0, 0])*fold)-1000,0])
-#             y_end = min([int(np.max(shape[:, 0, 1])*fold)+1000,slide_y])
-#             y_start = max([int(np.min(shape[:, 0, 1])*fold)-1000,0])
-#             hole_region = slide.read_region((x_start, y_start), 0, (x_end-x_start, y_end-y_start))
-#             hole_region = np.array(hole_region)[:,:,:3]
-#             hole_region_list.append(hole_region)
-#     return hole_region_list
 

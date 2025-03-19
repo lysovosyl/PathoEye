@@ -33,7 +33,7 @@ class LoadData(dataset.Dataset):
         self.std = (0.229, 0.224, 0.225)
         self.transform = transforms.Compose([
             transforms.Resize(512),
-            transforms.ToTensor(),  # 转换为张量
+            transforms.ToTensor(),
             transforms.Normalize(mean=self.mean, std=self.std)
 
         ])

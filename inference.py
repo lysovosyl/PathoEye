@@ -18,7 +18,7 @@ parse = argparse.ArgumentParser()
 parse.add_argument('-input_path',type=str,required=True,help='wsi should be store in this directory')
 parse.add_argument('-model_path',type=str,required=True,help='the directory should be generated from train')
 parse.add_argument('-save_path',type=str,required=True,help='this directory will save all patch which were sampled from wsi')
-parse.add_argument('-device',type=str,required=True)
+parse.add_argument('-device',type=str,default='cuda:0',help='The device on which to run this program. The default is cuda:0.')
 args = parse.parse_args()
 
 input_path = args.input_path
@@ -26,13 +26,7 @@ model_path = args.model_path
 save_path = args.save_path
 device = args.device
 
-
-# input_file = '/mnt/dfc_data1/home/linyusen/database/48_pyeye_pic/Zhoujj/20240613类天疱疮/2313359 - 2024-07-25 12.09.41.ndpi'
-# model_path = '/mnt/dfc_data1/home/linyusen/database/48_pyeye_pic/model'
-# save_path = '/mnt/dfc_data1/home/linyusen/database/48_pyeye_pic/one_sample'
-# device = 'cuda:1'
 #%%
-# 读取JSON文件
 with open(os.path.join(model_path,'config.json'), 'r', encoding='utf-8') as f:
     model_config = json.load(f)
 class_num = model_config['class_num']
@@ -46,7 +40,7 @@ mean = (0.485, 0.456, 0.406)
 std = (0.229, 0.224, 0.225)
 transform = transforms.Compose([
             transforms.Resize(512),
-            transforms.ToTensor(),  # 转换为张量
+            transforms.ToTensor(),
             transforms.Normalize(mean=mean, std=std)
         ])
 #%%

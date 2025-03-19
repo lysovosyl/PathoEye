@@ -18,17 +18,14 @@ parse = argparse.ArgumentParser()
 parse.add_argument('-test_path',type=str,required=True,help='this directory should be generator from create_patches.py')
 parse.add_argument('-model_path',type=str,required=True,help='the directory should be generated from train')
 parse.add_argument('-save_path',type=str,required=True,help='this directory will save the config of the model and its weight')
-parse.add_argument('-device',type=str,default='cuda:0')
+parse.add_argument('-device',type=str,default='cuda:0',help='The device on which to run this program. The default is cuda:0.')
 args = parse.parse_args()
 
 test_path = args.test_path
 model_path = args.model_path
 save_path = args.save_path
 device = args.device
-# test_path = '/mnt/dfc_data1/home/linyusen/database/48_pyeye_pic/four_type_disease/data/test2'
-# model_path = '/mnt/dfc_data1/home/linyusen/database/48_pyeye_pic/four_type_disease/result2'
-# save_path = '/mnt/dfc_data1/home/linyusen/database/48_pyeye_pic/four_type_disease/patheye_result'
-# device = 'cuda:0'
+
 #%%
 with open(os.path.join(model_path,'config.json'), 'r', encoding='utf-8') as f:
     model_config = json.load(f)
@@ -41,7 +38,7 @@ mean = (0.485, 0.456, 0.406)
 std = (0.229, 0.224, 0.225)
 transform = transforms.Compose([
             transforms.Resize(512),
-            transforms.ToTensor(),  # 转换为张量
+            transforms.ToTensor(),
             transforms.Normalize(mean=mean, std=std)
         ])
 
@@ -97,7 +94,7 @@ class LoadData(dataset.Dataset):
         self.std = (0.229, 0.224, 0.225)
         self.transform = transforms.Compose([
             transforms.Resize(512),
-            transforms.ToTensor(),  # 转换为张量
+            transforms.ToTensor(),
             transforms.Normalize(mean=self.mean, std=self.std)
         ])
 
@@ -153,67 +150,6 @@ for img,label,patient_list,disease_list,path_list in progress_bar:
         result[disease][patient]['prob'].append(outputs)
         result[disease][patient]['pred'].append(predict)
         result[disease][patient]['true'].append(model_config['label'][disease])
-
-#%%
-    # for index in range(len(img_list)):
-    #     img = img_list[index]
-    #     label = label_list[index]
-    #     patient = patient_list[index][0]
-    #     disease = disease_list[index][0]
-    #     img = img.float()
-    #     img = img.to(device)
-    #     outputs, acts = model(img)
-
-        # acts = acts.detach().cpu()
-        # label = torch.zeros_like(outputs)
-        # label[0, torch.argmax(outputs)] = 1
-        # loss = nn.CrossEntropyLoss()(outputs, label)
-        # loss.backward()
-        # grads = model.get_act_grads().detach().cpu()
-        #
-        # pooled_grads = torch.mean(grads, dim=[0, 2, 3]).detach().cpu()
-        # for i in range(acts.shape[1]):
-        #     acts[:, i, :, :] += pooled_grads[i]
-        #
-        # heatmap_j = torch.mean(acts, dim=1).squeeze()
-        # heatmap_j_max = heatmap_j.max(axis=0)[0]
-        # heatmap_j /= heatmap_j_max
-        #
-        # heatmap_j = heatmap_j.cpu().numpy()
-        # heatmap_j = resize(heatmap_j, (512, 512), preserve_range=True)
-        # cmap = mpl.cm.get_cmap('jet', 256)
-        # heatmap_j2 = cmap(heatmap_j, alpha=0.2)
-        # heatmap_j2 = heatmap_j2[:, :, :3]
-        #
-        # inpimg = img
-        # inpimg = torch.squeeze(inpimg)
-        # inpimg = torch.permute(inpimg, [1, 2, 0])
-        # inpimg = inpimg.detach().cpu().numpy()
-        #
-        # heatmap_j2 = heatmap_j2 / np.linalg.norm(heatmap_j2)
-        # inpimg = inpimg / np.linalg.norm(inpimg)
-        # superimposed_img = heatmap_j2 * 0.4 + inpimg * 0.6
-        #
-        # superimposed_img = (superimposed_img - np.min(superimposed_img)) * (
-        #         255 / (np.max(superimposed_img) - np.min(superimposed_img)))
-        # superimposed_img = np.clip(superimposed_img, 0, 255).astype(np.uint8)
-        #
-        # plt.imsave(os.path.join(explain_path, str(index) + '_{}_{}_heatmap.bmp'.format(disease, patient)),
-        #            superimposed_img)
-        #
-        # raw_image = (inpimg - np.min(inpimg)) * (255 / (np.max(inpimg) - np.min(inpimg)))
-        # raw_image = np.clip(raw_image, 0, 255).astype(np.uint8)
-        # plt.imsave(os.path.join(explain_path, str(index) + '_{}_{}_row.bmp'.format(disease, patient)), raw_image)
-
-        # outputs = torch.softmax(outputs, dim=1)
-        # outputs = outputs.cpu().detach().numpy()
-        # predict = np.argmax(outputs)
-        # result[disease][patient]['img'].append('nnn')
-        # result[disease][patient]['prob'].append(outputs)
-        # result[disease][patient]['pred'].append(predict)
-        # result[disease][patient]['true'].append(model_config['label'][disease])
-
-
 #%%
 f = open(os.path.join(predict_path,'predict_info.txt'),'w')
 writer = csv.writer(f)
@@ -224,7 +160,7 @@ for disease in result:
 f.close()
 
 #%%
-print('实际','预测')
+print('True','Predict')
 for disease in result:
     for patient in result[disease]:
         num = []

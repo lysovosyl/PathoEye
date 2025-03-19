@@ -25,67 +25,6 @@ def resize_image(img:np.array,size=2048):
     resized_image = img.resize(new_size)
     img = np.array(resized_image)
     return img,fold
-# def scan_object(slide,step=500):
-#     slide_width,slide_hight = slide.level_dimensions[0]
-#     ur_img = img_mean_pixel(slide,(0, 0), 0, (1024,1024))
-#     ul_img = img_mean_pixel(slide,(slide_width-1024, 0), 0, (1024,1024))
-#     dr_img = img_mean_pixel(slide,(0, slide_hight-1024), 0, (1024,1024))
-#     dl_img = img_mean_pixel(slide,(slide_width-1024, slide_hight-1024), 0, (1024,1024))
-#     reference_background = np.mean([ur_img,ul_img,dr_img,dl_img], axis=(0))
-#     white_background = np.array([250,250,250])
-#     reference_hight = step
-#     reference_width = step
-#     data_count_x = {}
-#     for i in range(0,slide_width-reference_width,reference_width):
-#         print(i)
-#         data_count_x[i] = {}
-#         region = slide.read_region((i, 0), 0, (reference_width, reference_hight))
-#         region = np.array(region)[:,:,:3]
-#         pixel = np.mean(region, axis=(0, 1))
-#         for j in range(0,slide_hight-reference_hight,reference_hight):
-#             region = slide.read_region((i, j), 0, (reference_width,reference_hight))
-#             region = np.array(region)[:,:,:3]
-#             pixel = np.mean(region, axis=(0, 1))
-#             distance1 = np.linalg.norm(reference_background - pixel)
-#             if distance1 > 40:
-#                 if j not in data_count_x[i].keys():
-#                     data_count_x[i][j] = 0
-#                 data_count_x[i][j] += 1
-#
-#     data_count_y = {}
-#     for j in range(0, slide_hight - reference_hight, reference_hight):
-#         print(j)
-#         data_count_y[j] = {}
-#         region = slide.read_region((0, j), 0, (reference_width, reference_hight))
-#         region = np.array(region)[:,:,:3]
-#         pixel = np.mean(region, axis=(0, 1))
-#         for i in range(0, slide_width - reference_width, reference_width):
-#             region = slide.read_region((i, j), 0, (reference_width, reference_hight))
-#             region = np.array(region)[:,:,:3]
-#             pixel = np.mean(region, axis=(0, 1))
-#             distance1 = np.linalg.norm(reference_background - pixel)
-#             if distance1 > 40:
-#                 if i not in data_count_y[j].keys():
-#                     data_count_y[j][i] = 0
-#                 data_count_y[j][i] += 1
-#
-#     x = []
-#     for i in data_count_x.keys():
-#         if len(data_count_x[i]) >= 3:
-#             x.append(i)
-#     y = []
-#     for i in data_count_y.keys():
-#         if len(data_count_y[i]) >= 3:
-#             y.append(i)
-#
-#     start_x = max([min(x) - 4*reference_width, 0])
-#     start_y = max([min(y) - 4*reference_hight, 0])
-#     length_x = min([max(x)-min(x)+8*reference_width,slide_width - start_x])
-#     length_y = min([max(y)-min(y)+8*reference_hight,slide_hight - start_y])
-#     region = slide.read_region((start_x, start_y), 0, (length_x, length_y))
-#     region = np.array(region)
-#     img = region[:, :, :3]
-#     return img
 
 
 def scan_object(slide):

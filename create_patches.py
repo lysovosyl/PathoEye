@@ -11,17 +11,14 @@ import cv2
 import argparse
 
 parse = argparse.ArgumentParser()
-parse.add_argument('-input_path',type=str,required=True,help='wsi should be store in this directory')
-parse.add_argument('-save_path',type=str,required=True,help='this directory will save all patch which were sampled from wsi')
-parse.add_argument('-device',type=str,required=True)
+parse.add_argument('-input_path',type=str,required=True,help='WSI should be store in this directory')
+parse.add_argument('-save_path',type=str,required=True,help='All patches which were sampled from WSI will be saved in this directory')
+parse.add_argument('-device',type=str,default='cuda:0',help='The device on which to run this program. The default is cuda:0.')
 args = parse.parse_args()
 input_path = args.input_path
 save_path = args.save_path
 device = args.device
 
-# input_path = '/mnt/dfc_data1/home/linyusen/database/48_pyeye_pic/patheye/data'
-# save_path = '/mnt/dfc_data1/home/linyusen/database/48_pyeye_pic/patheye/dataset'
-# device = 'cuda:0'
 seg = method_infoseg()
 sampler = sample_module(seg,device=device)
 
