@@ -1,3 +1,4 @@
+import csv
 
 import torch.nn as nn
 import torch.nn.functional as F
@@ -134,9 +135,6 @@ class SegModel():
         euclidean_distances = np.linalg.norm(target_pixel_color - sampled_pixel_means, axis=1)
         min_distance_index = euclidean_distances.argmin()
 
-        if min_distance_index < 30:
-            print('Target pixel found')
-
         segmented_image[segmented_image != unique_labels[min_distance_index]] = 0
         segmented_image[segmented_image == unique_labels[min_distance_index]] = 255
 
@@ -185,13 +183,13 @@ class SegModel():
         self.pre_segment_model()
         self.post_process_segmentation()
         return self.segmented_image, self.final_segmentation
-#%%
 def cut_pic(slide, image_height=900, image_width=900, screenshot_level=1,distance_threshold=20, target_pixel_color=[76.78, 37.92, 109.32]):
     num_row_images = slide.level_dimensions[screenshot_level][1] // image_height
     num_col_images = slide.level_dimensions[screenshot_level][0] // image_width
     zoom_ratio = slide.level_dimensions[0][1] // slide.level_dimensions[screenshot_level][1]
     vertical_correction_values = np.zeros(num_col_images)
     cropped_image_list = []
+    cropped_image_loc = []
     for row in range(num_row_images):
         horizontal_correction_value = 0
         for column in range(num_col_images):
@@ -259,7 +257,8 @@ def cut_pic(slide, image_height=900, image_width=900, screenshot_level=1,distanc
                         vertical_correction_values[column] += y_correction_value
 
                     cropped_image_list.append(cropped_image)
-    return cropped_image_list
+                    cropped_image_loc.append([int(x), int(y + y_correction_value * zoom_ratio),screenshot_level,image_width, image_height])
+    return cropped_image_list,cropped_image_loc
 def distance_to_edge(point, edge_points):
     point_matrix = np.full(edge_points.shape, point)
     distance_array = np.linalg.norm(point_matrix - edge_points, axis=1)
@@ -340,45 +339,29 @@ data_dir = args.data_dir
 if os.path.exists(save_dir) == False:
     os.makedirs(save_dir)
 
-ridge_data_dict = {}
-thickness_data_dict = {}
 for image_file in tqdm(os.listdir(data_dir)):
     file_path = os.path.join(data_dir,image_file)
     slide = openslide.OpenSlide(file_path)
-    image_cut_list = cut_pic(slide)
-    ridge_data_dict[image_file] = []
-    thickness_data_dict[image_file] = []
-    for image_cut in image_cut_list:
+    image_cut_list,cropped_image_loc_list = cut_pic(slide)
+    image_seg_list = []
+    image_loc_list = []
+    for image_cut,image_loc in zip(image_cut_list,cropped_image_loc_list):
         tissue_segmentation = SegModel(use_cuda=torch.cuda.is_available(), visualize=0)
         tissue_segmentation.load_image(image_cut)
         target_light, target_dark = tissue_segmentation.segment_tissue()
-        can_compute_edges, edge_sets = check_image(target_light, target_dark)
+        image_seg_list.append(target_light)
+        image_loc_list.append(image_loc)
 
-        if can_compute_edges and len(edge_sets)>=2:
-            fixed_edge = edge_sets[0]
-            target_edge = edge_sets[1]
-            euclidean_distances = compute_edge_thickness(target_dark, fixed_edge, target_edge)
-            if np.var(euclidean_distances[0]) > np.var(euclidean_distances[1]):
-                ridge_data = euclidean_distances[0]
-                thickness_data = euclidean_distances[1]
-            else:
-                ridge_data = euclidean_distances[1]
-                thickness_data = euclidean_distances[0]
-            ridge_data_dict[image_file].append(np.var(ridge_data))
-            thickness_data_dict[image_file].append(np.mean(thickness_data))
-        else:
-            print('No usable edges found')
-#%%
-max_length = max(len(v) for v in ridge_data_dict.values())
-data = {}
-for key in ridge_data_dict:
-    data[f"{key}"] = ridge_data_dict[key] + [None] * (max_length - len(ridge_data_dict[key]))
-df = pd.DataFrame(data)
-df.to_csv(os.path.join(save_dir,"thickness.csv"), index=False)
-
-max_length = max(len(v) for v in thickness_data_dict.values())
-data = {}
-for key in thickness_data_dict:
-    data[f"{key}"] = thickness_data_dict[key] + [None] * (max_length - len(thickness_data_dict[key]))
-df = pd.DataFrame(data)
-df.to_csv(os.path.join(save_dir,"ridge.csv"), index=False)
+    save_seg_dir = os.path.join(save_dir,image_file)
+    if os.path.exists(save_seg_dir) == False:
+        os.makedirs(save_seg_dir)
+    f = open(os.path.join(save_seg_dir,'image_info.csv'),'w')
+    w = csv.writer(f)
+    w.writerow(['index','x', 'y', 'screenshot_level', 'image_width', 'image_height'])
+    for index,mask in enumerate(image_seg_list):
+        loc = image_loc_list[index]
+        x, y, screenshot_level, image_width, image_height = loc
+        save_file = os.path.join(save_seg_dir,'{}.png'.format(index))
+        cv2.imwrite(filename=save_file, img=mask)
+        w.writerow([index, x, y, screenshot_level, image_width, image_height])
+    f.close()
