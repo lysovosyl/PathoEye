@@ -28,7 +28,7 @@ conda activate PathoEye
 ## Step by step
 
 ### Epidermis thickness and the variance of rete ridge length calculation
-The following example assumes that digitized whole slide image data in well known standard formats (.svs, .ndpi, .tiff etc.) are stored under a folder named DATA_DIRECTORY
+The following example assumes that digitized whole slide image data in well known standard formats (.svs, .ndpi, .tiff etc.) are stored under a folder named DATA_DIRECTORY, then implement thickness.py， this program will calculate the thickness and the variance of rete ridge of each image in the DATA_DIRECTORY and saves the result in save_dir.
 ```
     DATA_DIRECTORY/
         ├──slide_1.svs
