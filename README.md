@@ -86,7 +86,7 @@ The level 1 images will be stored in ./save_dir.
             └──image_info.csv
         └── ...
 ```
-Below is an example table for image_info.csv. 
+Here is an example of image_info.csv. 
 
 | index | x |    y | screenshot_level | image_width| image_height|
 |:------|     :---:      |-----:|           ---: |           ---: |           ---: |
@@ -94,7 +94,7 @@ Below is an example table for image_info.csv.
 | 2     |  36000    | 477  | 1     |  900   |  900 |
 | 3     |  14400    | 4456 | 1     |  900   |  900 |
 
-This table includes 6 columns. 
+The detailed explaination of columns: 
   - `index`: The image file name, corresponding to x.png.
   - `x`: The x-coordinate location to crop the image x.png in the WSI.
   - `y`: The y-coordinate location to crop the image x.png in the WSI.
@@ -102,16 +102,14 @@ This table includes 6 columns.
   - `image_width`: The width of the image.
   - `image_height`: The height of the image.
 
-### Epidermis thickness and variance of rete ridge length calculation
-You can apply thickness.py to calculate the thickness and the variance of rete ridge of each image in the DATA_DIRECTORY. The output will be saved in the save_dir directory.
-
-
+### Thickness and rete ridge score calculation
+Perform the thickness and rete ridge score calculation using thickness.py with the images in the DATA_DIRECTORY. (this step use level 1 images as input?)
 
 ```sh
 python thickness.py -data_dir /DATA_DIRECTORY -save_path ./save_dir
 ```
 
-### Epidermis-guided patch sampling
+### Epidermis-guided patch sampling (感觉前面的步骤完全不需要了？没有太明白。)
 As described in the last step, the input images should be organized in the right file format and directory. Then, you can applied create_patches.py to segment images of the whole-slide images (WSIs).  
 The organized WSIs must be stored under a folder named TRAIN_DIRECTORY(train dataset) or VAL_DIRECTORY (validation dataset). 
 ```
@@ -151,6 +149,7 @@ The organized WSIs must be stored under a folder named TRAIN_DIRECTORY(train dat
             └── ...
         └── ...
 ```
+
 ```sh
 python create_patches.py -input_path /TRAIN_DIRECTORY -save_path /TRAIN_DATASET -device cuda:0
 python create_patches.py -input_path /VAL_DIRECTORY -save_path /VAL_DATASET -device cuda:0
@@ -204,6 +203,8 @@ Subsequently, you can apply the trained model to perform binary classification o
 ```sh
 python inference.py -input_path /SLIDER.SVS -model_path /MODEL_SAVEPATH -save_path ./RESULT
 ```
+
+Radiomics部分呢？
 
 ## Please cite
 
