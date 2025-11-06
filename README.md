@@ -1,3 +1,6 @@
+# PathoEye
+
+PathoEye: a deep learning framework for the whole-slide image analysis of skin tissue.
 
 ## Table of Contents
 
@@ -18,17 +21,35 @@ conda create -n PathoEye python==3.8
 pip install -r requirements.txt
 conda activate PathoEye
 ```
+The detailed dependencies are listed as follows:
+
+```
+SimpleITK==2.2.1
+torch==2.0.0
+torchmetrics==0.9.0
+torchvision==0.15.1
+opencv-python==4.7.0.72
+opencv-python-headless==4.7.0.72
+scikit-image==0.20.0
+scikit-learn==1.2.2
+openslide-python==1.2.0
+matplotlib==3.7.0
+matplotlib-inline==0.1.6
+pyradiomics==3.0.1
+six==1.16.0
+numpy==1.23.5
+pandas==2.0.1
+pypickle==1.1.0
+```
 
 ## Step by step tutorial
 
-### Testing dataset
-This data can be downloaded from https://gtexportal.org/home/histologyPage
-
-
-
+### Prepare testing datasets
+The sample dataset for testing PathoEye can be downloaded from Zenodo ().
+The full dataset for the young and old skin analysis are free available at [GTEx project](https://gtexportal.org/home/histologyPage).
 
 ### Epidermis extraction
-The following example assumes that the whole slide images (WSIs) data is organized in well known standard formats (such as .svs, .ndpi, .tiff etc.) and stored in a folder named DATA_DIRECTORY.
+The whole slide images (WSIs) should be organized in the standard formats (.svs, .ndpi or .tiff) and stored in a folder as follows:
 ```
     DATA_DIRECTORY/
         ├──slide_1.svs
@@ -38,11 +59,11 @@ The following example assumes that the whole slide images (WSIs) data is organiz
         └── ...
         
 ```
-You can run epidermis_extract.py to extract epidermis of each WSI in the DATA_DIRECTORY as following. 
+Run epidermis_extract.py to extract the epidermis of each WSI and generate the level 1 images as follows: 
 ```sh
 python epidermis_extract.py -data_dir /DATA_DIRECTORY -save_path ./save_dir
 ```
-The epidermis layer will be saved in ./save_dir. 
+The level 1 images will be stored in ./save_dir. 
 ```
     save_dir/
         ├──slide_1
