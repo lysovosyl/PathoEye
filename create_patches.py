@@ -14,14 +14,16 @@ parse = argparse.ArgumentParser()
 parse.add_argument('-input_path',type=str,required=True,help='WSI should be store in this directory')
 parse.add_argument('-save_path',type=str,required=True,help='All patches which were sampled from WSI will be saved in this directory')
 parse.add_argument('-device',type=str,default='cuda:0',help='The device on which to run this program. The default is cuda:0.')
+parse.add_argument('-target_image',type=str,default=None,help='The device on which to run this program. The default is cuda:0.')
+
 args = parse.parse_args()
 input_path = args.input_path
 save_path = args.save_path
 device = args.device
+target_image = args.target_image
 
 seg = method_infoseg()
-sampler = sample_module(seg,device=device)
-
+sampler = sample_module(seg,device=device,target_img_path=target_image,target_pixel=[215, 128, 193])
 
 #%%
 image_index = {}
@@ -30,26 +32,26 @@ for disease in os.listdir(input_path):
     if os.path.exists(os.path.join(save_path,disease)) == False:
         os.makedirs(os.path.join(save_path,disease))
     for disease_index,img in enumerate(tqdm(os.listdir(os.path.join(input_path,disease)))):
-        if os.path.exists(os.path.join(save_path, disease,str(disease_index))) == False:
-            os.makedirs(os.path.join(save_path, disease,str(disease_index)))
-        if os.path.exists(os.path.join(save_path, disease,str(disease_index),'data')) == False:
-            os.makedirs(os.path.join(save_path, disease,str(disease_index),'data'))
-        image_index[disease][img] = disease_index
-        input_file = os.path.join(input_path,disease,img)
-        slide = openslide.open_slide(input_file)
-        print('sample ing ')
-        sampler.sample_object(slide)
-        print('sample complete')
+        try:
 
-        print('imwrite ing',sampler.mask_show_target.shape,sampler.raw_img.shape)
-        cv2.imwrite(os.path.join(save_path, disease, str(disease_index), '{}.png'.format('mask_target')),sampler.mask_show_target)
-        cv2.imwrite(os.path.join(save_path, disease, str(disease_index), '{}.png'.format('raw_img')),sampler.raw_img)
-        print('imwrite ing')
-        for img_index,img in enumerate(sampler.sample_list):
-            if img_index > 120:
-                break
-            if img.shape[0] > 1 and img.shape[1] > 1 and img.shape[0] == img.shape[1]:
-                cv2.imwrite(os.path.join(save_path,disease,str(disease_index),'data','{}.png'.format(img_index)),img)
+            if os.path.exists(os.path.join(save_path, disease,str(disease_index))) == False:
+                os.makedirs(os.path.join(save_path, disease,str(disease_index)))
+            if os.path.exists(os.path.join(save_path, disease,str(disease_index),'data')) == False:
+                os.makedirs(os.path.join(save_path, disease,str(disease_index),'data'))
+            image_index[disease][img] = disease_index
+            input_file = os.path.join(input_path,disease,img)
+            slide = openslide.open_slide(input_file)
+            sampler.sample_object(slide)
+            cv2.imwrite(os.path.join(save_path, disease, str(disease_index), '{}.png'.format('mask_target')),sampler.mask_show_target)
+            cv2.imwrite(os.path.join(save_path, disease, str(disease_index), '{}.png'.format('raw_img')),sampler.raw_img)
+            for img_index,img in enumerate(sampler.sample_list):
+                if img_index > 120:
+                    break
+                if img.shape[0] > 1 and img.shape[1] > 1 and img.shape[0] == img.shape[1]:
+                    cv2.imwrite(os.path.join(save_path,disease,str(disease_index),'data','{}.png'.format(img_index)),img)
+        except:
+            print(disease_index,img)
+            continue
 #%%
 
 f = open(os.path.join(save_path,'slide_info.csv'),'w')

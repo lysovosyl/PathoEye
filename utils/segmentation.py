@@ -33,11 +33,11 @@ class method_infoseg():
         self.model = InfoSeg(input_channel, nChannel=self.nChannel, nConv=self.nConv)
         self.optimizer = optim.SGD(self.model.parameters(), lr=self.lr, momentum=0.9)
 
-    def filter_mask_select_pixel(self,img, mask, pixel=[174.04746886, 136.90078296, 193.84494564]):
+    def filter_mask_select_pixel(self,img, mask, target_pixel = [174.04746886, 136.90078296, 193.84494564]):
         label_distance = {}
         for index, label in enumerate(np.unique(mask)):
             pixel_list = img[mask == label]
-            target_pixel = np.array(pixel)
+            target_pixel = np.array(target_pixel)
             region_pexel = np.mean(pixel_list, axis=0)
             euclidean_distance = np.linalg.norm(target_pixel - region_pexel)
             label_distance[label] = euclidean_distance
@@ -94,7 +94,7 @@ class method_infoseg():
         img = img.permute([1, 2, 0])
         img = img.cpu().numpy().astype(np.uint8)
         mask_all = self.mask.reshape(img.shape[:2])
-        mask_target = self.filter_mask_select_pixel(img, mask_all)
+        mask_target = self.filter_mask_select_pixel(img, mask_all,target_pixel=target_pixel)
 
         del output, loss, target,ignore
         torch.cuda.empty_cache()
