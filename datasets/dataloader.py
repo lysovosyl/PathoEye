@@ -27,6 +27,7 @@ class LoadData(dataset.Dataset):
             for patient in os.listdir(os.path.join(path, disease)):
                 for img in os.listdir(os.path.join(path, disease, patient, 'data')):
                     self.data[disease].append(os.path.join(path, disease, patient, 'data', img))
+            print(disease,len(self.data[disease]))
             num.append(len(self.data[disease]))
         self.data_len = min(num)
         self.mean = (0.485, 0.456, 0.406)
