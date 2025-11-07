@@ -110,12 +110,14 @@ python test.py -test_path /TEST_DIRECTORY -model_path /MODEL_SAVEPATH -save_path
 
 ## Module4: explanation and discovery 
 
-```sh
-python inference.py -input_path /SLIDER.SVS -model_path /MODEL_SAVEPATH -save_path /RESULT_SAVEPATH
-```
 This module aims to interpret the decision process of the trained classification model and discover meaningful histological characteristics associated with different classes. It contains two main functionalities:
 1. Model Inference with Visual Explanation:The inference.py script performs inference on a single whole-slide image (WSI). It generates both class prediction results and Grad-CAM heatmaps that highlight the most discriminative tissue regions used by the model.
 2. Radiomic Feature:The radiomic_feature.py script extracts radiomic features from each image to quantify texture, shape, and intensity patterns. These features help reveal interpretable and human-understandable morphological characteristics linked to the model’s prediction.
+
+```sh
+python inference.py -input_path /SLIDER.SVS -model_path /MODEL_SAVEPATH -save_path /RESULT_SAVEPATH
+```
+
 ```sh
 python radiomic_feature.py -input_path /TEST_DATASET -save_path /RESULT_SAVEPATH
 ```
