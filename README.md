@@ -11,7 +11,7 @@
 # Background
 The whole-slide images (WSI) examination of skin biopsy is the golden standard for pathological diagnosis of most skin diseases. While most studies focus on the classification tasks, an interpretable computational framework is lacking for WSI analysis. To this end, we developed PathoEye for WSI analysis in dermatology, which integrates epidermis-guided sampling, deep learning and radiomics. The established classification model using PathoEye performed better than the existing state-of-the-art methods in discriminating the young and aged skin. Moreover, PathoEye performs comparably with the existing methods in the binary classification of healthy and diseased skin while performing better in multi-classification tasks.
 
-# Installation
+# Install
 Make sure you have installed all the package that were list in requirements.txt
 ```
 conda create -n PathoEye python==3.8
@@ -45,7 +45,30 @@ pypickle==1.1.0
 The sample dataset for testing PathoEye can be downloaded from Zenodo (). The full dataset for the young and old skin analysis are free available at [GTEx project](https://gtexportal.org/home/histologyPage).
 
 
-## Module1: Epidermis extraction & Module2: Patch sampling
+## Module1:
+### 1. Epidermis extraction
+The following example assumes that the whole slide images (WSIs) data is organized in well known standard formats (such as .svs, .ndpi, .tiff etc.) and stored in a folder named DATA_DIRECTORY.
+```
+    DATA_DIRECTORY/
+        ├──slide_1.svs
+        ├──slide_1.svs
+        ├──slide_2.svs
+        ├──slide_3.svs
+        └── ...
+```
+You can run epidermis_extract.py to extract epidermis of each WSI in the DATA_DIRECTORY as following. 
+```sh
+python epidermis_extract.py -data_dir /DATA_DIRECTORY -save_path ./EPIDERMIS_SAVEPATH
+```
+
+### 2. Epidermis thickness and variance of rete ridge length calculation
+After running epidermis_extract.py, you can apply thickness.py to calculate the thickness and the variance of the rete ridge for each image in the EPIDERMIS_SAVEPATH. The results will be saved in the specified save_dir directory.
+```sh
+python thickness.py -data_dir /EPIDERMIS_SAVEPATH -save_path ./RESULT_SAVEPATH
+```
+
+## Module2:
+### 1. Patch sampling
 As described in the last step, the input images should be organized in the right file format and directory. Then, you can applied create_patches.py to segment images of the whole-slide images (WSIs).  
 The organized WSIs must be stored under a folder named TRAIN_DIRECTORY(train dataset) , VAL_DIRECTORY (validation dataset) and TSET_DIRECTORY (test dataset). 
 ```
@@ -96,7 +119,8 @@ python create_patches.py -input_path /VAL_DIRECTORY -save_path /VAL_DATASET -dev
 python create_patches.py -input_path /TEST_DIRECTORY -save_path /TEST_DATASET -device cuda:0
 ```
 
-## Module3: DCNN classification
+## Module3:
+### 1. DCNN classification
 This program trains a Deep Convolutional Neural Network (DCNN) model to classify patch-level images that were generated in the previous step. The model takes the extracted patches as input and learns discriminative features to distinguish different tissue conditions.
 ```sh
 python train.py -train_path /TRAIN_DATASET -val_path /VAL_DATASET -save_path /MODEL_SAVEPATH
@@ -108,16 +132,15 @@ This program evaluates the trained DCNN model on the test dataset. The model pre
 python test.py -test_path /TEST_DIRECTORY -model_path /MODEL_SAVEPATH -save_path /RESULT_SAVEPATH
 ```
 
-## Module4: explanation and discovery 
-
-This module aims to interpret the decision process of the trained classification model and discover meaningful histological characteristics associated with different classes. It contains two main functionalities:
-1. Model Inference with Visual Explanation:The inference.py script performs inference on a single whole-slide image (WSI). It generates both class prediction results and Grad-CAM heatmaps that highlight the most discriminative tissue regions used by the model.
-2. Radiomic Feature:The radiomic_feature.py script extracts radiomic features from each image to quantify texture, shape, and intensity patterns. These features help reveal interpretable and human-understandable morphological characteristics linked to the model’s prediction.
+## Module4: 
+### 1. Explanation and Discovery 
 
 ```sh
 python inference.py -input_path /SLIDER.SVS -model_path /MODEL_SAVEPATH -save_path /RESULT_SAVEPATH
 ```
-
+This module aims to interpret the decision process of the trained classification model and discover meaningful histological characteristics associated with different classes. It contains two main functionalities:
+1. Model Inference with Visual Explanation:The inference.py script performs inference on a single whole-slide image (WSI). It generates both class prediction results and Grad-CAM heatmaps that highlight the most discriminative tissue regions used by the model.
+2. Radiomic Feature:The radiomic_feature.py script extracts radiomic features from each image to quantify texture, shape, and intensity patterns. These features help reveal interpretable and human-understandable morphological characteristics linked to the model’s prediction.
 ```sh
 python radiomic_feature.py -input_path /TEST_DATASET -save_path /RESULT_SAVEPATH
 ```
