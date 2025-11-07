@@ -10,13 +10,7 @@
 
 # Background
 The whole-slide images (WSI) examination of skin biopsy is the golden standard for pathological diagnosis of most skin diseases. While most studies focus on the classification tasks, an interpretable computational framework is lacking for WSI analysis. To this end, we developed PathoEye for WSI analysis in dermatology, which integrates epidermis-guided sampling, deep learning and radiomics. The established classification model using PathoEye performed better than the existing state-of-the-art methods in discriminating the young and aged skin. Moreover, PathoEye performs comparably with the existing methods in the binary classification of healthy and diseased skin while performing better in multi-classification tasks.
-# Installation
-Make sure you have installed all the package that were list in requirements.txt
-```
-conda create -n PathoEye python==3.8
-pip install -r requirements.txt
-conda activate PathoEye
-```
+
 # Install
 Make sure you have installed all the package that were list in requirements.txt
 ```
