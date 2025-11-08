@@ -50,7 +50,7 @@ pypickle==1.1.0
 ## Tutorial
 
 ## Testing dataset
-The example dataset for testing PathoEye can be downloaded from figShare (https://doi.org/10.6084/m9.figshare.30566108.v1). 
+The example dataset and the pretrained weights for testing PathoEye can be downloaded from figShare (https://doi.org/10.6084/m9.figshare.30566108.v1). 
 The full dataset for the young and old skin analysis are free available at [GTEx project](https://gtexportal.org/home/histologyPage).
 
 ## Module1: epidermis extraction
