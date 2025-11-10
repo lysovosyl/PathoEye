@@ -129,14 +129,3 @@ class sample_module():
                         self.sample_list.append(normalized_img)
 
 
-if __name__ == '__main__':
-    path = '/mnt/dfc_data1/home/linyusen/database/48_pyeye_pic/Zhoujj/healthy2/GTEX-XQ8I-0426.svs'
-    source = openslide.OpenSlide(path)
-    seg_method = method_infoseg()
-    sampler = sample_module(seg_method)
-    sampler.sample_object(source)
-    for index,img in enumerate(sampler.sample_list):
-        if img.shape[0] > 1 and img.shape[1] > 1:
-            img,fold = resize_image(img, 512)
-            plt.imsave('/mnt/dfc_data1/home/linyusen/database/48_pyeye_pic/test_sample/{}.png'.format(index),img)
-
