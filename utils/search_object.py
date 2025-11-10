@@ -60,13 +60,5 @@ def scan_object(slide):
             break
     return hole_region_list
 
-#%%
-if __name__ == '__main__':
-    path = '/mnt/dfc_data1/home/linyusen/database/48_pyeye_pic/Zhoujj/20240613类天疱疮/2312315 - 2024-06-13 15.36.02.ndpi'
-    slide = openslide.OpenSlide(path)
-    img_list = scan_object(slide)
-    for img in img_list:
-        img,fold = resize_image(img)
-        plt.imshow((img))
-        plt.show()
+
 
