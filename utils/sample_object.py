@@ -16,7 +16,6 @@ from skimage import color
 def generate_random_colors(n):
     colors = []
     for _ in range(n):
-        # 随机生成 RGB 值，每个值在 0-255 之间
         color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         colors.append(color)
     return colors
